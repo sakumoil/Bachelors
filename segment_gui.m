@@ -188,7 +188,8 @@ if size(handles.image) == [240 320]
     handles.image = imresize(handles.image, 2);
 end
 
-imageNumber = handles.iteration;                    %Append the current image to the images variable
+%Append the current image to the images variable
+imageNumber = handles.iteration;                    
 handles.images(:,:,imageNumber) = handles.image;
 
 axes(handles.axes1);
@@ -196,19 +197,31 @@ imshow(handles.image, []);
 
 guidata(hObject, handles);
 
-% --- Executes on button press in ellipsebutton.
+
 function ellipsebutton_Callback(hObject, ~, handles)
-% hObject    handle to ellipsebutton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% Executes on button press of "Ellipse button". 
+
 handles.alteredimage = handles.image;
-normalizedImage = uint8(255*mat2gray(handles.alteredimage));        % Normalize the grayscale image
-BW = normalizedImage > handles.thresholdValue;                      % Create a binary image depending on threshold value
-BW_fill = imfill(BW, 'holes');                                      % Fill holes in the binary image
-BW_fill = bwareafilt(BW_fill, 2, 4);                                % Only choose two largest areas from binary image
-BW_fill = bwareaopen(BW_fill, 20000);                               % If area is under 20 000 px, delete it
-blobMeasurements = regionprops(BW_fill, normalizedImage, 'all');    % Get measurements from blobs
-numberOfBlobs = size(blobMeasurements, 1);                          % Number of areas in binary image
+% Normalize the grayscale image
+normalizedImage = uint8(255*mat2gray(handles.alteredimage));  
+
+% Create a binary image depending on threshold value
+BW = normalizedImage > handles.thresholdValue;        
+
+% Fill holes in the binary image
+BW_fill = imfill(BW, 'holes');   
+
+ % Only choose two largest areas from binary image
+BW_fill = bwareafilt(BW_fill, 2, 4); 
+
+% If area is under 20 000 px, delete it
+BW_fill = bwareaopen(BW_fill, 20000);  
+
+% Get measurements from blobs
+blobMeasurements = regionprops(BW_fill, normalizedImage, 'all');    
+
+% Number of areas in binary image
+numberOfBlobs = size(blobMeasurements, 1);                          
 
 BW = double(BW);
 BW_fill = double(BW_fill);
@@ -313,6 +326,7 @@ results((handles.ROI_id-1)*8+1:handles.ROI_id*8)=[average, maximum, minimum, sta
 show_results(handles, average, maximum, minimum, standard, homogeneity1, entropy1);
 
 guidata(hObject,handles);
+
 
 % --- Executes on button press in thresholdUp.
 function thresholdUp_Callback(hObject, eventdata, handles)
