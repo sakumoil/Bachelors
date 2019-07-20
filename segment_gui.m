@@ -1,26 +1,5 @@
 function varargout = segment_gui(varargin)
-% SEGMENT_GUI MATLAB code for segment_gui.fig
-%      SEGMENT_GUI, by itself, creates a new SEGMENT_GUI or raises the existing
-%      singleton*.
-%
-%      H = SEGMENT_GUI returns the handle to a new SEGMENT_GUI or the handle to
-%      the existing singleton*.
-%
-%      SEGMENT_GUI('CALLBACK',hObject,eventData,handles,...) calls the local
-%      function named CALLBACK in SEGMENT_GUI.M with the given input arguments.
-%
-%      SEGMENT_GUI('Property','Value',...) creates a new SEGMENT_GUI or raises the
-%      existing singleton*.  Starting from the left, property value pairs are
-%      applied to the GUI before segment_gui_OpeningFcn gets called.  An
-%      unrecognized property name or invalid value makes property application
-%      stop.  All inputs are passed to segment_gui_OpeningFcn via varargin.
-%
-%      *See GUI Options on GUIDE's Tools menu.  Choose "GUI allows only one
-%      instance to run (singleton)".
-%
-% See also: GUIDE, GUIDATA, GUIHANDLES
-
-% Edit the above text to modify the response to help segment_gui
+%SEGMENT_GUI: This script is used to extract textural data from specified ROIs from a thermal image
 
 % Last Modified by GUIDE v2.5 05-Apr-2019 08:56:05
 
@@ -61,7 +40,7 @@ clear global
 handles.ellipseSizex = 120;
 handles.ellipseSizey = 80;
 
-% Set the threhold value for binary image. Easy to specify from histogram
+% Set the threshold value for binary image. Easy to specify from histogram
 % of normalized image.
 handles.thresholdValue = 140;
 textLabel = sprintf('Current threshold is: %d', handles.thresholdValue);
@@ -99,20 +78,24 @@ end
 handles.list_images = dir([handles.folder_name, '\*.jpg']);
 handles.name_image = [handles.folder_name, '\', handles.list_images(handles.iteration).name];
 
+% Use FlirMovieReader to read image
 [v]= FlirMovieReader([handles.name_image]);
 v.unit = 'temperatureFactory';          % set the desired unitwhile
 [image, metadata] =step(v);
 handles.image=double(image);
 handles.altered_image=handles.image;
 
+% Display current image name in text box
 textLabel = sprintf(handles.list_images(handles.iteration).name);
 set(handles.text1, 'String', textLabel);
 
+% Resize image to [480 640]
 if size(handles.image) == [240 320]
     handles.image = imresize(handles.image, 2);
 end
 
-imageNumber = handles.iteration;                         % Append the current image to images -variable
+% Append the current image to images -variable
+imageNumber = handles.iteration;
 handles.images(:,:,imageNumber) = handles.image;
 
 axes(handles.axes1);
@@ -122,12 +105,12 @@ guidata(hObject, handles);
 
 % --- Executes on button press in nextimagebutton.
 function nextimagebutton_Callback(hObject, eventdata, handles)
-% hObject    handle to nextimagebutton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% Change to next image in directory
+
 handles.iteration=handles.iteration+1;
 handles.ROI_id = 0;
 
+% If current image is the last image in the folder, raise error message
 if handles.iteration>size(handles.list_images,1)
     textLabel = sprintf('No pictures left!');
     set(handles.text1, 'String', textLabel)
@@ -135,24 +118,30 @@ if handles.iteration>size(handles.list_images,1)
     return
 end
 
+% Set image name into handles
 handles.name_image = [handles.folder_name, '\', handles.list_images(handles.iteration).name];
 
+% Use FlirMovieReader to properly read thermal images
 [v]= FlirMovieReader([handles.name_image]);
-v.unit = 'temperatureFactory';          % set the desired unitwhile
+v.unit = 'temperatureFactory';
 [image, metadata] =step(v);
 handles.image=double(image);
 handles.altered_image=handles.image;
 
-textLabel = sprintf(handles.list_images(handles.iteration).name); 
+% Display name of current image in text field
+textLabel = sprintf(handles.list_images(handles.iteration).name);
 set(handles.text1, 'String', textLabel);
 
+% Resize image to [480 640]
 if size(handles.image) == [240 320]
     handles.image = imresize(handles.image, 2);
 end
 
-imageNumber = handles.iteration;                         %Append the current image to the images variable
+% Append the current image to the images variable
+imageNumber = handles.iteration;
 handles.images(:,:,imageNumber) = handles.image;
 
+% Show current image
 axes(handles.axes1);
 imshow(handles.image, []);
 
@@ -364,9 +353,7 @@ guidata(hObject, handles);
 
 % --- Executes on button press in savebutton.
 function savebutton_Callback(hObject, eventdata, handles)
-% hObject    handle to savebutton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+% Save button
 images = handles.images;
 textural = handles.textural;
 
