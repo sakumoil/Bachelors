@@ -1,7 +1,7 @@
 function varargout = segment_gui(varargin)
 %SEGMENT_GUI: This script is used to extract textural data from specified ROIs from a thermal image
 % The script tries to find patella from knees automatically using thresholding. The default thresholding
-% value is 140. After drawgin ROI, user can modify them as needed
+% value is 140. After drawing ROI, user can modify them as needed
 
 
 % Begin initialization code - DO NOT EDIT
@@ -90,7 +90,7 @@ handles.name_image = [handles.folder_name, '\', handles.list_images(handles.iter
 
 % Use FlirMovieReader to read image
 [v]= FlirMovieReader([handles.name_image]);
-v.unit = 'temperatureFactory';          % set the desired unitwhile
+v.unit = 'temperatureFactory';
 [image, ~] =step(v);
 handles.image=double(image);
 handles.altered_image=handles.image;
