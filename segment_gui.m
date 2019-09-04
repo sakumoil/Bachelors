@@ -64,7 +64,8 @@ function varargout = segment_gui_OutputFcn(hObject, eventdata, handles)
     varargout{1} = handles.output;
 
 
-    % --- Executes on button press in folderbutton.
+
+% --- Executes on button press in folderbutton.
 function folderbutton_Callback(hObject, eventdata, handles)
 % Specify folder containig thermal images
 
@@ -115,8 +116,8 @@ guidata(hObject, handles);
 
 % --- Executes on button press in nextimagebutton.
 function nextimagebutton_Callback(hObject, eventdata, handles)
-    % Change to next image in directory
 
+    % Change to next image in directory
     handles.iteration=handles.iteration+1;
     handles.ROI_id=0;
 
@@ -211,7 +212,6 @@ function previousimagebutton_Callback(hObject, eventdata, handles)
     % Append the current image to the images variable
     imageNumber = handles.iteration;
     handles.images(:,:,imageNumber) = handles.image;
-    image = handles.image;
 
     axes(handles.axes1);
     imshow(handles.image, []);
@@ -220,8 +220,8 @@ function previousimagebutton_Callback(hObject, eventdata, handles)
 
 
 function ellipsebutton_Callback(hObject, ~, handles)
-    % Executes on button press of "Ellipse button".
 
+    % Executes on button press of "Ellipse button".
     handles.alteredimage = handles.image;
 
     % Normalize the grayscale image
@@ -245,10 +245,11 @@ function ellipsebutton_Callback(hObject, ~, handles)
     % Number of areas in binary image
     numberOfBlobs = size(blobMeasurements, 1);
 
+    % Find filled areas and set them to variable
     BW = double(BW);
     BW_fill = double(BW_fill);
     BW_diff = imabsdiff(BW, BW_fill);
-    t = find(BW_diff);
+    areas_filled = find(BW_diff);
 
     % Get the centroids and areas of all blobs left
     for k = 1 : numberOfBlobs
@@ -275,22 +276,32 @@ function ellipsebutton_Callback(hObject, ~, handles)
         if blobCentroid(2) < 200 || blobCentroid(2) > 400
             continue
         end
+
+        % Define ellipse x-coordinate of ellipse center
         ellipseX(handles.ROI_id) = blobCentroid(1)-handles.ellipseSizex/2;
 
+        % Only define ellipse y-coordinate if current image is the first
+        % in directory. Otherwise keep the same height for ellipse for rest of
+        % the images.
         if handles.iteration == 1
             handles.ellipseY = blobCentroid(2)-handles.ellipseSizey/2;
         end
+
+        % Define the ellipse
         handles.hEllipse(handles.ROI_id) = imellipse(gca, [ellipseX(handles.ROI_id) handles.ellipseY handles.ellipseSizex handles.ellipseSizey]);
         wait(handles.hEllipse(handles.ROI_id));
 
         %Save ROI position into a variable
         handles.pos{handles.ROI_id} = getPosition(handles.hEllipse(handles.ROI_id));
 
+        % If current image is the first in directory, save ellipse y-coordinate into a variable
+        % for later user.
         if handles.iteration == 1
             pos = getPosition(handles.hEllipse(handles.ROI_id));
             handles.ellipseY = pos(2);
         end
 
+        % Create mask of ellipse
         BW = handles.hEllipse(handles.ROI_id).createMask();
 
         % Save the number of pixels in ROI into a variable
@@ -299,13 +310,24 @@ function ellipsebutton_Callback(hObject, ~, handles)
         se = strel('disk',2,8);
         BW2=BW-imerode(BW,se);
         handles.alteredimage(BW2==1)=max(handles.image(:));
-        for j = 1:length(t)                                               %Change filled areas to NaN
-            handles.image(t(j)) = NaN;
+
+        % Set filled areas to NaN
+        for j = 1:length(areas_filled)
+            handles.image(areas_filled(j)) = NaN;
         end
         imshow(handles.alteredimage,[]);
+
+        % Calculate textural parameters and save them to variables
         [handles.average(handles.ROI_id), handles.maximum(handles.ROI_id), handles.minimum(handles.ROI_id), handles.standard(handles.ROI_id), handles.homogeneity1(handles.ROI_id), handles.entropy1(handles.ROI_id), handles.homogeneity2(handles.ROI_id), handles.entropy2(handles.ROI_id)] = calcul_parameters(handles.image,BW);
-        handles.textural(1, handles.ROI_id, handles.iteration) = handles.average(handles.ROI_id); handles.textural(2, handles.ROI_id, handles.iteration) = handles.maximum(handles.ROI_id); handles.textural(3, handles.ROI_id, handles.iteration) = handles.minimum(handles.ROI_id); handles.textural(4, handles.ROI_id, handles.iteration) = handles.standard(handles.ROI_id);
-        handles.textural(5, handles.ROI_id, handles.iteration) = handles.homogeneity1(handles.ROI_id); handles.textural(6, handles.ROI_id, handles.iteration) = handles.entropy1(handles.ROI_id); handles.textural(7, handles.ROI_id, handles.iteration) = handles.homogeneity2(handles.ROI_id); handles.textural(8, handles.ROI_id, handles.iteration) = handles.entropy2(handles.ROI_id);
+
+        handles.textural(1, handles.ROI_id, handles.iteration) = handles.average(handles.ROI_id);
+        handles.textural(2, handles.ROI_id, handles.iteration) = handles.maximum(handles.ROI_id);
+        handles.textural(3, handles.ROI_id, handles.iteration) = handles.minimum(handles.ROI_id);
+        handles.textural(4, handles.ROI_id, handles.iteration) = handles.standard(handles.ROI_id);
+        handles.textural(5, handles.ROI_id, handles.iteration) = handles.homogeneity1(handles.ROI_id);
+        handles.textural(6, handles.ROI_id, handles.iteration) = handles.entropy1(handles.ROI_id);
+        handles.textural(7, handles.ROI_id, handles.iteration) = handles.homogeneity2(handles.ROI_id);
+        handles.textural(8, handles.ROI_id, handles.iteration) = handles.entropy2(handles.ROI_id);
     end
 
     % Draw four more ROI
@@ -322,9 +344,17 @@ function ellipsebutton_Callback(hObject, ~, handles)
         BW2=BW-imerode(BW,se);
         handles.alteredimage(BW2==1)=max(handles.image(:));
         imshow(handles.alteredimage,[]);
+
         [handles.average(handles.ROI_id), handles.maximum(handles.ROI_id), handles.minimum(handles.ROI_id), handles.standard(handles.ROI_id), handles.homogeneity1(handles.ROI_id), handles.entropy1(handles.ROI_id), handles.homogeneity2(handles.ROI_id), handles.entropy2(handles.ROI_id)] = calcul_parameters(handles.image,BW);
-        handles.textural(1, handles.ROI_id, handles.iteration) = handles.average(handles.ROI_id); handles.textural(2, handles.ROI_id, handles.iteration) = handles.maximum(handles.ROI_id); handles.textural(3, handles.ROI_id, handles.iteration) = handles.minimum(handles.ROI_id); handles.textural(4, handles.ROI_id, handles.iteration) = handles.standard(handles.ROI_id);
-        handles.textural(5, handles.ROI_id, handles.iteration) = handles.homogeneity1(handles.ROI_id); handles.textural(6, handles.ROI_id, handles.iteration) = handles.entropy1(handles.ROI_id); handles.textural(7, handles.ROI_id, handles.iteration) = handles.homogeneity2(handles.ROI_id); handles.textural(8, handles.ROI_id, handles.iteration) = handles.entropy2(handles.ROI_id);
+        handles.textural(1, handles.ROI_id, handles.iteration) = handles.average(handles.ROI_id);
+        handles.textural(2, handles.ROI_id, handles.iteration) = handles.maximum(handles.ROI_id);
+        handles.textural(3, handles.ROI_id, handles.iteration) = handles.minimum(handles.ROI_id);
+        handles.textural(4, handles.ROI_id, handles.iteration) = handles.standard(handles.ROI_id);
+        handles.textural(5, handles.ROI_id, handles.iteration) = handles.homogeneity1(handles.ROI_id);
+        handles.textural(6, handles.ROI_id, handles.iteration) = handles.entropy1(handles.ROI_id);
+        handles.textural(7, handles.ROI_id, handles.iteration) = handles.homogeneity2(handles.ROI_id);
+        handles.textural(8, handles.ROI_id, handles.iteration) = handles.entropy2(handles.ROI_id);
+
 
         handles.ROI_id = handles.ROI_id+1;
         handles.hEllipse(handles.ROI_id) = imellipse(gca, [ellipseX(j) handles.ellipseY+150 handles.ellipseSizex handles.ellipseSizey]);
@@ -338,13 +368,20 @@ function ellipsebutton_Callback(hObject, ~, handles)
         BW2=BW-imerode(BW,se);
         handles.alteredimage(BW2==1)=max(handles.image(:));
         imshow(handles.alteredimage,[]);
+
         [handles.average(handles.ROI_id), handles.maximum(handles.ROI_id), handles.minimum(handles.ROI_id), handles.standard(handles.ROI_id), handles.homogeneity1(handles.ROI_id), handles.entropy1(handles.ROI_id), handles.homogeneity2(handles.ROI_id), handles.entropy2(handles.ROI_id)] = calcul_parameters(handles.image,BW);
-        handles.textural(1, handles.ROI_id, handles.iteration) = handles.average(handles.ROI_id); handles.textural(2, handles.ROI_id, handles.iteration) = handles.maximum(handles.ROI_id); handles.textural(3, handles.ROI_id, handles.iteration) = handles.minimum(handles.ROI_id); handles.textural(4, handles.ROI_id, handles.iteration) = handles.standard(handles.ROI_id);
-        handles.textural(5, handles.ROI_id, handles.iteration) = handles.homogeneity1(handles.ROI_id); handles.textural(6, handles.ROI_id, handles.iteration) = handles.entropy1(handles.ROI_id); handles.textural(7, handles.ROI_id, handles.iteration) = handles.homogeneity2(handles.ROI_id); handles.textural(8, handles.ROI_id, handles.iteration) = handles.entropy2(handles.ROI_id);
+        handles.textural(1, handles.ROI_id, handles.iteration) = handles.average(handles.ROI_id);
+        handles.textural(2, handles.ROI_id, handles.iteration) = handles.maximum(handles.ROI_id);
+        handles.textural(3, handles.ROI_id, handles.iteration) = handles.minimum(handles.ROI_id);
+        handles.textural(4, handles.ROI_id, handles.iteration) = handles.standard(handles.ROI_id);
+        handles.textural(5, handles.ROI_id, handles.iteration) = handles.homogeneity1(handles.ROI_id);
+        handles.textural(6, handles.ROI_id, handles.iteration) = handles.entropy1(handles.ROI_id);
+        handles.textural(7, handles.ROI_id, handles.iteration) = handles.homogeneity2(handles.ROI_id);
+        handles.textural(8, handles.ROI_id, handles.iteration) = handles.entropy2(handles.ROI_id);
     end
 
     [average, maximum, minimum, standard, homogeneity1, entropy1, homogeneity2, entropy2] = calcul_parameters(handles.image,BW);
-    results((handles.ROI_id-1)*8+1:handles.ROI_id*8)=[average, maximum, minimum, standard, homogeneity1, entropy1, homogeneity2, entropy2];
+    %results((handles.ROI_id-1)*8+1:handles.ROI_id*8)=[average, maximum, minimum, standard, homogeneity1, entropy1, homogeneity2, entropy2];
     show_results(handles, average, maximum, minimum, standard, homogeneity1, entropy1);
 
     guidata(hObject,handles);
