@@ -64,7 +64,6 @@ function varargout = segment_gui_OutputFcn(hObject, eventdata, handles)
     varargout{1} = handles.output;
 
 
-
 % --- Executes on button press in folderbutton.
 function folderbutton_Callback(hObject, eventdata, handles)
 % Specify folder containig thermal images
@@ -81,7 +80,7 @@ if handles.folder_name==0
 end
 
 % ########## ERROR HANDLING HERE ############
-
+ 
 % ###########################################
 
 % Get all images from folder
