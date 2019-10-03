@@ -25,7 +25,7 @@ levels=ceil(temp_difference/0.1);
 
 % calculate rotationally invariant homogeneity index at 0.1 accuracy
 offset=[0 1;-1 0;-1 1; -1 -1];
-glcm_temp=graycomatrix(matrix2, 'Graylimits', [minimum maximum], 'NumLevels',levels,'Offset',offset);
+glcm_temp=graycomatrix(matrix2, 'Graylimits', [minimum maximum], 'NumLevels', levels, 'Offset',offset);
 tot_glcm=sum(glcm_temp,3);
 stats=graycoprops(tot_glcm,'Homogeneity');
 homogeneity1=stats.Homogeneity;
@@ -37,12 +37,12 @@ counta=double(tot)/sum(tot,2);
 Hgram1=zeros(1,size(tot,2));
      for m=1:size(tot,2)
          if counta(m)~=0
-             Hgram1(m)=counta(m).*log2(counta(m));           
-         end          
+             Hgram1(m)=counta(m).*log2(counta(m));
+         end
      end
-     
+
  entropy1=abs(sum(Hgram1(:)));
- 
+
 clearvars -except average maximum minimum standard homogeneity1 entropy1 temp_difference maximum minimum offset matrix2
 
 levels=ceil(temp_difference/0.2);
@@ -59,10 +59,10 @@ counta=double(tot)/sum(tot,2);
 Hgram1=zeros(1,size(tot,2));
      for m=1:size(tot,2)
          if counta(m)~=0
-             Hgram1(m)=counta(m).*log2(counta(m));           
+             Hgram1(m)=counta(m).*log2(counta(m));
          end
      end
-     
+
  entropy2=abs(sum(Hgram1(:)));
 
  clearvars -except average maximum minimum standard homogeneity1 entropy1 homogeneity2 entropy2
