@@ -80,7 +80,7 @@ if handles.folder_name==0
 end
 
 % ########## ERROR HANDLING HERE ############
- 
+
 % ###########################################
 
 % Get all images from folder
@@ -361,7 +361,7 @@ function ellipsebutton_Callback(hObject, ~, handles)
         handles.pos{handles.ROI_id} = getPosition(handles.hEllipse(handles.ROI_id));
         BW = handles.hEllipse(handles.ROI_id).createMask();
 
-        handles.numberOfPixels{handles.ROI_id} = find(BW)
+        handles.numberOfPixels{handles.ROI_id} = find(BW);
 
         se = strel('disk',2,8);
         BW2=BW-imerode(BW,se);
