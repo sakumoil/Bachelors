@@ -24,7 +24,7 @@ levels=ceil(temp_difference/0.1);
 
 % calculate rotationally invariant homogeneity index at 0.1 accuracy
 offset=[0 1;-1 0;-1 1; -1 -1];
-glcm_temp=graycomatrix(matrix2, 'Graylimits', [minimum maximum], 'NumLevels',levels,'Offset',offset);
+glcm_temp=graycomatrix(matrix2, 'Graylimits', [minimum maximum], 'NumLevels', levels, 'Offset',offset);
 tot_glcm=sum(glcm_temp,3);
 stats=graycoprops(tot_glcm,'Homogeneity');
 homogeneity1=stats.Homogeneity;
