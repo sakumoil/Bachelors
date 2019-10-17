@@ -15,7 +15,6 @@ matrix2(mask==0)=NaN;
 % calculate both the mean value and standard deviation of the mask
 average=nanmean(matrix2(:));
 standard=std(matrix2(:),'omitnan');
-
 % estimate the amount of levels to use based on camera accuracy
 % matrix=round(matrix,1);
 maximum=nanmax(matrix2(:));
@@ -37,12 +36,12 @@ counta=double(tot)/sum(tot,2);
 Hgram1=zeros(1,size(tot,2));
      for m=1:size(tot,2)
          if counta(m)~=0
-             Hgram1(m)=counta(m).*log2(counta(m));           
-         end          
+             Hgram1(m)=counta(m).*log2(counta(m));
+         end
      end
-     
+
  entropy1=abs(sum(Hgram1(:)));
- 
+
 clearvars -except average maximum minimum standard homogeneity1 entropy1 temp_difference maximum minimum offset matrix2
 
 levels=ceil(temp_difference/0.2);
@@ -59,10 +58,10 @@ counta=double(tot)/sum(tot,2);
 Hgram1=zeros(1,size(tot,2));
      for m=1:size(tot,2)
          if counta(m)~=0
-             Hgram1(m)=counta(m).*log2(counta(m));           
+             Hgram1(m)=counta(m).*log2(counta(m));
          end
      end
-     
+
  entropy2=abs(sum(Hgram1(:)));
 
  clearvars -except average maximum minimum standard homogeneity1 entropy1 homogeneity2 entropy2
