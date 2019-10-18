@@ -325,7 +325,7 @@ function ellipsebutton_Callback(hObject, ~, handles)
         handles.textural(handles.iteration, handles.ROI_id, 4) = handles.standard(handles.ROI_id);
         handles.textural(handles.iteration, handles.ROI_id, 5) = handles.homogeneity1(handles.ROI_id);
         handles.textural(handles.iteration, handles.ROI_id, 6) = handles.entropy1(handles.ROI_id);
-        handles.textural(handles.iteration, handles.ROI_id, 7) = handles.homoge neity2(handles.ROI_id);
+        handles.textural(handles.iteration, handles.ROI_id, 7) = handles.homogeneity2(handles.ROI_id);
         handles.textural(handles.iteration, handles.ROI_id, 8) = handles.entropy2(handles.ROI_id);
     end
 
@@ -425,7 +425,7 @@ function savebutton_Callback(hObject, eventdata, handles)
 
     maxpixels = [];
 
-    cellfun('length', handles.numberOfPixels(1))
+    cellfun('length', handles.numberOfPixels(1));
 
     % handles.ROIs(:,handles.ROI_id ,handles.iteration) = numberOfPixels;
 
