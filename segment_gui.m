@@ -79,10 +79,6 @@ if handles.folder_name==0
     return
 end
 
-% ########## ERROR HANDLING HERE ############
-
-% ###########################################
-
 % Get all images from folder
 handles.list_images = dir([handles.folder_name, '\*.jpg']);
 handles.name_image = [handles.folder_name, '\', handles.list_images(handles.iteration).name];
@@ -430,8 +426,12 @@ function savebutton_Callback(hObject, eventdata, handles)
     % handles.ROIs(:,handles.ROI_id ,handles.iteration) = numberOfPixels;
 
     folder_name = strsplit(handles.folder_name, '\');
-    file_name = folder_name{length(folder_name)};
-    save_name = [handles.folder_name, '\', file_name];
+    file_name = folder_name{8};
+    save_dir = fullfile(['results', '\', folder_name{7}, '\']);
+    save_name = [save_dir, file_name];
+    if ~exist(save_dir, 'dir')
+        mkdir(save_dir);
+    end
 
     save(save_name, 'images', 'textural');
     guidata(hObject, handles);
