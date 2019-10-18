@@ -38,8 +38,8 @@ function segment_gui_OpeningFcn(hObject, eventdata, handles, varargin)
     guidata(hObject, handles);
 
     % Set default ellipse size
-    handles.ellipseSizex = 120;
-    handles.ellipseSizey = 80;
+    handles.ellipseSizex = 130;
+    handles.ellipseSizey = 90;
 
     % Set the threshold value for binary image. Easy to specify from histogram
     % of normalized image.
