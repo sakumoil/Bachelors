@@ -43,7 +43,7 @@ function segment_gui_OpeningFcn(hObject, eventdata, handles, varargin)
 
     % Set the threshold value for binary image. Easy to specify from histogram
     % of normalized image.
-    handles.thresholdValue = 140;
+    handles.thresholdValue = 120;
     textLabel = sprintf('Current threshold is: %d', handles.thresholdValue);
 
     % Initialize figure elements
