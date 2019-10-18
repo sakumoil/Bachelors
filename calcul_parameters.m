@@ -15,7 +15,6 @@ matrix2(mask==0)=NaN;
 % calculate both the mean value and standard deviation of the mask
 average=nanmean(matrix2(:));
 standard=std(matrix2(:),'omitnan');
-
 % estimate the amount of levels to use based on camera accuracy
 % matrix=round(matrix,1);
 maximum=nanmax(matrix2(:));
