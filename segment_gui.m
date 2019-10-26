@@ -352,7 +352,7 @@ function ellipsebutton_Callback(hObject, ~, handles)
 
 
         handles.ROI_id = handles.ROI_id+1;
-        handles.hEllipse(handles.ROI_id) = imellipse(gca, [ellipseX(j) handles.ellipseY+150 handles.ellipseSizex handles.ellipseSizey]);
+        handles.hEllipse(handles.ROI_id) = imellipse(gca, [ellipseX(j) handles.ellipseY+150 handles.ellipseSizex handles.ellipseSizey-10]);
         wait(handles.hEllipse(handles.ROI_id));
         handles.pos{handles.ROI_id} = getPosition(handles.hEllipse(handles.ROI_id));
         BW = handles.hEllipse(handles.ROI_id).createMask();
