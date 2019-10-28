@@ -7,3 +7,5 @@ With this script, the user can:
 - Specify ROIs from thermal images
 - Calculate textural parameters from these ROIs
 - Save both images and textural parameters into a .mat file
+
+![png](examples/gui.PNG)
