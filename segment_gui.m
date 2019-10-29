@@ -407,7 +407,7 @@ function thresholdDown_Callback(hObject, eventdata, handles)
 function thresholdUp5_Callback(hObject, eventdata, handles)
     % Add 5 to current threshold
 
-    handles.thresholdValue = handles.thresholdValue+5;
+    handles.thresholdValue = handles.thresholdValue+3;
     textLabel = sprintf('Current threshold is: %d', handles.thresholdValue);
     set(handles.text2, 'String',textLabel);
 
@@ -417,7 +417,7 @@ function thresholdUp5_Callback(hObject, eventdata, handles)
 function thresholdDown5_Callback(hObject, eventdata, handles)
     % Remove 5 from current threshold
 
-    handles.thresholdValue = handles.thresholdValue-5;
+    handles.thresholdValue = handles.thresholdValue-3;
     textLabel = sprintf('Current threshold is: %d', handles.thresholdValue);
     set(handles.text2, 'String',textLabel);
 
@@ -456,3 +456,13 @@ function savebutton_Callback(hObject, eventdata, handles)
 
     save(save_name, 'images', 'textural');
     guidata(hObject, handles);
+
+
+% --- Executes on key release with focus on figure1 or any of its controls.
+function figure1_WindowKeyReleaseFcn(hObject, eventdata, handles)
+% hObject    handle to figure1 (see GCBO)
+% eventdata  structure with the following fields (see MATLAB.UI.FIGURE)
+%	Key: name of the key that was released, in lower case
+%	Character: character interpretation of the key(s) that was released
+%	Modifier: name(s) of the modifier key(s) (i.e., control, shift) released
+% handles    structure with handles and user data (see GUIDATA)
