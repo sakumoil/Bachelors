@@ -402,6 +402,27 @@ function thresholdDown_Callback(hObject, eventdata, handles)
 
     guidata(hObject, handles);
 
+
+% --- Executes on button press in thresholdUp5.
+function thresholdUp5_Callback(hObject, eventdata, handles)
+    % Add 5 to current threshold
+
+    handles.thresholdValue = handles.thresholdValue+5;
+    textLabel = sprintf('Current threshold is: %d', handles.thresholdValue);
+    set(handles.text2, 'String',textLabel);
+
+    guidata(hObject, handles);
+
+% --- Executes on button press in thresholdDown5.
+function thresholdDown5_Callback(hObject, eventdata, handles)
+    % Remove 5 from current threshold
+
+    handles.thresholdValue = handles.thresholdValue-5;
+    textLabel = sprintf('Current threshold is: %d', handles.thresholdValue);
+    set(handles.text2, 'String',textLabel);
+
+    guidata(hObject, handles);
+
 % --- Executes on button press in resetbutton.
 function resetbutton_Callback(hObject, eventdata, handles)
     % Remove all ROIs
