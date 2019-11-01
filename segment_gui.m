@@ -444,8 +444,8 @@ function thresholdDown_Callback(hObject, eventdata, handles)
 
 
 % --- Executes on button press in thresholdUp5.
-function thresholdUp5_Callback(hObject, eventdata, handles)
-    % Add 5 to current threshold
+function thresholdUp3_Callback(hObject, eventdata, handles)
+    % Add 3 to current threshold
 
     handles.thresholdValue = handles.thresholdValue+3;
     textLabel = sprintf('Current threshold is: %d', handles.thresholdValue);
@@ -454,8 +454,8 @@ function thresholdUp5_Callback(hObject, eventdata, handles)
     guidata(hObject, handles);
 
 % --- Executes on button press in thresholdDown5.
-function thresholdDown5_Callback(hObject, eventdata, handles)
-    % Remove 5 from current threshold
+function thresholdDown3_Callback(hObject, eventdata, handles)
+    % Remove 3 from current threshold
 
     handles.thresholdValue = handles.thresholdValue-3;
     textLabel = sprintf('Current threshold is: %d', handles.thresholdValue);
