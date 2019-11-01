@@ -390,15 +390,15 @@ function manual_ellipsebutton_Callback(hObject, eventdata, handles)
 
     handles.ROI_id = handles.ROI_id+1;
 
-    handles.hEllipse(handles.ROI_id) = imellipse;
-    wait;
+    axes(handles.axes1);
+    handles.hEllipse(handles.ROI_id) = imellipse(gca);
+    wait(handles.hEllipse(handles.ROI_id));
     BW = createMask(handles.hEllipse(handles.ROI_id));
-    delete(handles.hEllipse(handles.ROI_id));
     se = strel('disk', 2, 8);
     BW2 = BW-imerode(BW, se);
 
     % If current image is the first in directory, save ellipse y-coordinate into a variable
-        % for later user.
+    % for later user.
         if handles.iteration == 1
             pos = getPosition(handles.hEllipse(handles.ROI_id));
             handles.ellipseY = pos(2);
@@ -418,7 +418,7 @@ function manual_ellipsebutton_Callback(hObject, eventdata, handles)
     handles.textural(handles.iteration, handles.ROI_id, 6) = handles.entropy1(handles.ROI_id);
     handles.textural(handles.iteration, handles.ROI_id, 7) = handles.homogeneity2(handles.ROI_id);
     handles.textural(handles.iteration, handles.ROI_id, 8) = handles.entropy2(handles.ROI_id);
-    show_results(handles, average, maximum, minimum, standard, homogeneity1, entropy1);
+    show_results(handles, handles.average(handles.ROI_id), handles.maximum(handles.ROI_id), handles.minimum(handles.ROI_id), handles.standard(handles.ROI_id), handles.homogeneity1(handles.ROI_id), handles.entropy1(handles.ROI_id));
 
     guidata(hObject,handles);
 
@@ -480,12 +480,6 @@ function savebutton_Callback(hObject, eventdata, handles)
     images = handles.images;
     textural = handles.textural;
 
-    maxpixels = [];
-
-    cellfun('length', handles.numberOfPixels(1));
-
-    % handles.ROIs(:,handles.ROI_id ,handles.iteration) = numberOfPixels;
-
     folder_name = strsplit(handles.folder_name, '\');
     file_name = folder_name{8};
     save_dir = fullfile(['results', '\', folder_name{7}, '\']);
@@ -498,3 +492,11 @@ function savebutton_Callback(hObject, eventdata, handles)
     guidata(hObject, handles);
 
 
+% --- Executes on key release with focus on figure1 or any of its controls.
+function figure1_WindowKeyReleaseFcn(hObject, eventdata, handles)
+    % hObject    handle to figure1 (see GCBO)
+    % eventdata  structure with the following fields (see MATLAB.UI.FIGURE)
+    %	Key: name of the key that was released, in lower case
+    %	Character: character interpretation of the key(s) that was released
+    %	Modifier: name(s) of the modifier key(s) (i.e., control, shift) released
+    % handles    structure with handles and user data (see GUIDATA)
