@@ -443,7 +443,7 @@ function thresholdDown_Callback(hObject, eventdata, handles)
     guidata(hObject, handles);
 
 
-% --- Executes on button press in thresholdUp5.
+% --- Executes on button press in thresholdUp3.
 function thresholdUp3_Callback(hObject, eventdata, handles)
     % Add 3 to current threshold
 
@@ -453,7 +453,7 @@ function thresholdUp3_Callback(hObject, eventdata, handles)
 
     guidata(hObject, handles);
 
-% --- Executes on button press in thresholdDown5.
+% --- Executes on button press in thresholdDown3.
 function thresholdDown3_Callback(hObject, eventdata, handles)
     % Remove 3 from current threshold
 
