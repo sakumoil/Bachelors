@@ -1,25 +1,49 @@
 % storedStructure = load('/Users/sakumoil/Documents/Opinnot/Kandi/thermal_scripts/subject100/0 minute_fridge (2).mat');
 % img = storedStructure.image;
 
-img = 'C:\Users\admin\Projects\Bachelors\helsinki thermal\10\Mikro1min10\0 minute_warm1 left medial10.jpg';
+img = 'C:\Users\admin\Projects\Bachelors\helsinki thermal\6\Jääkaappi6\0 minute_fridge left lateral6.jpg';
+img2 = 'C:\Users\admin\Projects\Bachelors\helsinki thermal\6\Jääkaappi6\0 minute_fridge front6.jpg';
+img3 = 'C:\Users\admin\Projects\Bachelors\helsinki thermal\2\Jääkaappi2\0 minute_fridge front2.jpg';
 
 [v]= FlirMovieReader([img]);
 v.unit = 'temperatureFactory';
 [image, ~] =step(v);
 image=double(image);
 
+[v]= FlirMovieReader([img2]);
+v.unit = 'temperatureFactory';
+[image2, ~] = step(v);
+image2 = double(image2);
+
+[v]= FlirMovieReader([img3]);
+v.unit = 'temperatureFactory';
+[image3, ~] = step(v);
+image3 = double(image3);
+
 normalizedImage = uint8(255*mat2gray(image));
-BW = normalizedImage > 180;
-BW_fill = imfill(BW, 'holes');
-BW_fill = bwareafilt(BW_fill, 2, 4);
-blobMeasurements = regionprops(BW_fill, normalizedImage, 'all');
+imshow(normalizedImage);
+imsave();
+normalizedImage2 = uint8(255*mat2gray(image2));
+imshow(normalizedImage2);
+imsave();
+normalizedImage3 = uint8(255*mat2gray(image3));
+imshow(normalizedImage3);
+imsave();
 
-image = imresize(image, 2);
+% subplot(1, 3, 1); imshow(normalizedImage); hold on;
+% subplot(1, 3, 2); imshow(normalizedImage2); hold on;
+% subplot(1, 3, 3); imshow(normalizedImage3); hold on;
 
-imshow(BW_fill);
-alteredimage = normalizedImage;
-
-numberOfBlobs = size(blobMeasurements, 1)
+% BW = normalizedImage > 140;
+% BW_fill = imfill(BW, 'holes');
+% BW_fill = bwareafilt(BW_fill, 2, 4);
+% blobMeasurements = regionprops(BW_fill, normalizedImage, 'all')
+% 
+% image = imresize(image, 2);
+% 
+% alteredimage = normalizedImage;
+% 
+% numberOfBlobs = size(blobMeasurements, 1)
 
 % BW = double(BW);
 % BW_fill = double(BW_fill);

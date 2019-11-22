@@ -253,10 +253,10 @@ function ellipsebutton_Callback(hObject, ~, handles)
     end
 
 
-    % In case of just 1 blob recognized and it's area being over 95000 pixels,
+    % In case of just 1 blob recognized and it's area being over 110 000 pixels,
     % it's safe to assume that the picture is taken either from front or behind
     % and number of blobs is 1, so we need to simulate the thigh gap
-    if numberOfBlobs == 1 && blobArea > 95000
+    if numberOfBlobs == 1 && blobArea > 110000
         centroidHorizontal = round(blobCentroid(1:2:end-1));
         BW(:, centroidHorizontal) = 0;
         BW = bwareaopen(BW, 20000);
@@ -287,7 +287,7 @@ function ellipsebutton_Callback(hObject, ~, handles)
         wait(handles.hEllipse(handles.ROI_id));
 
         %Save ROI position into a variable
-        handles.pos{handles.ROI_id} = getPosition(handles.hEllipse(handles.ROI_id));
+        handles.pos{handles.ROI_id} = getPosition(handles.hEllipse(handles.ROI_id))
 
         % If current image is the first in directory, save ellipse y-coordinate into a variable
         % for later user.
@@ -479,15 +479,19 @@ function savebutton_Callback(hObject, eventdata, handles)
 
     images = handles.images;
     textural = handles.textural;
+    list = handles.list_images;
 
     folder_name = strsplit(handles.folder_name, '\');
     file_name = folder_name{8};
     save_dir = fullfile(['results', '\', folder_name{7}, '\']);
     save_name = [save_dir, file_name];
+    list_name = [save_dir, file_name, '_list'];
+    
     if ~exist(save_dir, 'dir')
         mkdir(save_dir);
     end
 
+    save(list_name, 'list');
     save(save_name, 'images', 'textural');
     guidata(hObject, handles);
 
